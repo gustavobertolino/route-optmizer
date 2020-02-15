@@ -1,0 +1,22 @@
+{
+  "name": "route-optmizer",
+  "version": "1.0.0",
+  "description": "Vehicle routing application to find the best routes to any store's orders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gustavobertolino/route-optmizer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gustavobertolino/route-optmizer/issues"
+  },
+  "homepage": "https://github.com/gustavobertolino/route-optmizer#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
