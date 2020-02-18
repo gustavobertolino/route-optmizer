@@ -1,4 +1,4 @@
-import StoreService from '../service/StoreService.js';
+const StoreService = require('../service/StoreService.js');
 
 // Create and Save a new Store
 exports.create = async(req, res) => {
@@ -10,8 +10,12 @@ exports.create = async(req, res) => {
     }
 
     const storeDto = req.body;
-    const newStore = await StoreService.createStore(storeDto);
-    return res.json({newStore});
+    try {
+        const newStore = await StoreService.createNewStore(storeDto);
+        res.json({newStore}); 
+    } catch (error) {
+        error.message;
+    }
 };
 
 // Find a single store with an id
