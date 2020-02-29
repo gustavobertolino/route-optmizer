@@ -1,18 +1,14 @@
 const Store = require('../model/Store.js');
-const Promise = require('bluebird');
 
-export default class StoreService {
+exports.createNewStore = async (storeDto) => {
+    const newStore = new Store({
+        name: storeDto.name,
+        latitude: storeDto.latitude,
+        longitude: storeDto.longitude
+    });
 
-    async createStore(storeDto) {
-        try {
-            const newStore = new Store({
-                name: storeDto.name,
-                latitude: storeDto.latitude,
-                longitude: storeDto.longitude
-            })
-            return await newStore.save();
-        } catch (error) {
-            throw new Error(error);
-        } 
-    }
+    await newStore.save()
+        .then(data => {return {success: true, result: data};})
+        .catch(error => {return {success: false, result: error};
+    });
 }

@@ -1,7 +1,8 @@
-import StoreService from '../service/StoreService.js';
+const Store = require('../model/Store.js');
+const StoreService = require('../service/StoreService.js');
 
 // Create and Save a new Store
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if(!req.body.name || !req.body.latitude || !req.body.longitude) {
         return res.status(400).send({
@@ -10,8 +11,11 @@ exports.create = async(req, res) => {
     }
 
     const storeDto = req.body;
-    const newStore = await StoreService.createStore(storeDto);
-    return res.json({newStore});
+    await StoreService.createNewStore(storeDto)
+        .then(response => {res.send(response);})
+        .catch(error => {res.status(500).send({
+            message: error.message || "Some error occurred while creating the Store."});
+    });
 };
 
 // Find a single store with an id
@@ -39,9 +43,9 @@ exports.findOne = (req, res) => {
 // Update a store identified by the id in the request
 exports.update = (req, res) => {
     // Validate Request
-    if(!req.body.name) {
+    if(!req.body.name || !req.body.latitude || !req.body.longitude) {
         return res.status(400).send({
-            message: "Store name and coordinates cannot be empty"
+            message: "Store name or coordinates cannot be empty"
         });
     }
 
