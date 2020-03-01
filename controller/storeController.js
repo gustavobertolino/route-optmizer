@@ -19,29 +19,41 @@ exports.create = async (req, res) => {
 };
 
 // Find a single store with an id
-exports.findOne = (req, res) => {
-    Store.findById(req.params.id)
-    .then(store => {
-        if(!store) {
+exports.findOne = async (req, res) => {
+    const storeId = req.params.id
+    await StoreService.findStoreById(storeId)
+    .then(response => {
+        if(!response) {
             return res.status(404).send({
-                message: "Store not found with id " + req.params.id
+                message: "Store not found with id " + storeId
             });            
         }
-        res.send(store);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Store not found with id " + req.params.id
+        return res.send(response);
+    }).catch(error => {
+        if(error.kind === 'ObjectId') {
+            res.status(404).send({
+                message: "Store not found with id " + storeId
             });                
         }
-        return res.status(500).send({
-            message: "Error retrieving store with id " + req.params.id
+        res.status(500).send({
+            message: "Error retrieving store with id " + storeId
         });
     });
 };
 
+exports.findAll = async (req, res) => {
+    try {
+        var response = await StoreService.findAllStores();
+        return res.send(response);
+    } catch(error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving stores."
+        });
+    }
+};
+
 // Update a store identified by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     // Validate Request
     if(!req.body.name || !req.body.latitude || !req.body.longitude) {
         return res.status(400).send({
@@ -49,27 +61,25 @@ exports.update = (req, res) => {
         });
     }
 
+    const storeId = req.params.id;
+    const storeDto = req.body;
     // Find store and update it with the request body
-    Note.findByIdAndUpdate(req.params.noteId, {
-        name: req.body.name,
-        latitude: req.body.latitude,
-        longitude: req.body.longitude
-    }, {new: true})
-    .then(store => {
-        if(!store) {
+    await StoreService.updateStore(storeId, storeDto)
+    .then(response => {
+        if (!response) {
             return res.status(404).send({
-                message: "Store not found with id " + req.params.id
+                message: "Store not found with id " + storeId
             });
         }
-        res.send(note);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
+        res.send(response);
+    }).catch(error => {
+        if(error.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Store not found with id " + req.params.id
+                message: "Store not found with id " + storeId
             });                
         }
         return res.status(500).send({
-            message: "Error updating store with id " + req.params.id
+            message: "Server error updating store with id " + storeId
         });
     });
 };
