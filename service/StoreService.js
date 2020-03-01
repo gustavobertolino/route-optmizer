@@ -12,3 +12,30 @@ exports.createNewStore = async (storeDto) => {
         .catch(error => {return {success: false, result: error};
     });
 }
+
+exports.findStoreById = async (storeId) => {
+    try {
+        var result = await Store.findById(storeId);
+        return {success: true, result: result};
+    } catch (error) {
+        return {success: false, result: error};
+    }
+}
+
+exports.findAllStores = async () => {
+    try {
+        var result = await Store.find();
+        return {success: true, result: result};
+    } catch(error) {
+        return {success: false, result: error};
+    }
+}
+
+exports.updateStore = async (storeId, storeDto) => {
+    try {
+        var result = await Store.findByIdAndUpdate(storeId, storeDto, {new: true});
+        return {success: true, result: result};
+    } catch(error) {
+        return {success: false, result: error};
+    }
+}
