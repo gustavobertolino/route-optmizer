@@ -18,7 +18,7 @@ exports.findStoreById = async (storeId) => {
         var result = await Store.findById(storeId);
         return {success: true, result: result};
     } catch (error) {
-        return {success: false, result: error};
+        throw new Error(error);
     }
 }
 
@@ -36,6 +36,6 @@ exports.updateStore = async (storeId, storeDto) => {
         var result = await Store.findByIdAndUpdate(storeId, storeDto, {new: true});
         return {success: true, result: result};
     } catch(error) {
-        return {success: false, result: error};
+        throw new Error(error);   
     }
 }

@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 
 // Require Store routes (It must be right before app.listen)
 require('./endpoints/storeEndpoints.js')(app);
+require('./endpoints/routeEndpoints.js')(app);
 app.listen(port, () => console.log(`Route-opt listening on port ${port}!`))
 
 // Connecting to the database

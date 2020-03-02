@@ -1,4 +1,3 @@
-const Store = require('../model/Store.js');
 const StoreService = require('../service/StoreService.js');
 
 // Create and Save a new Store
@@ -30,7 +29,7 @@ exports.findOne = async (req, res) => {
         }
         return res.send(response);
     }).catch(error => {
-        if(error.kind === 'ObjectId') {
+        if(error.message.includes('ObjectId')) {
             res.status(404).send({
                 message: "Store not found with id " + storeId
             });                
@@ -73,7 +72,7 @@ exports.update = async (req, res) => {
         }
         res.send(response);
     }).catch(error => {
-        if(error.kind === 'ObjectId') {
+        if(error.message.includes('ObjectId')) {
             return res.status(404).send({
                 message: "Store not found with id " + storeId
             });                
