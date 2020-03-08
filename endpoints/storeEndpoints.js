@@ -4,7 +4,7 @@ module.exports = (app) => {
     // Create a new Store
     app.post('/stores', store.create);
 
-    // Retrieve a single Store with noteId
+    // Retrieve a single Store with id
     app.get('/stores/:id', store.findOne);
 
     // Retrieve all stores
