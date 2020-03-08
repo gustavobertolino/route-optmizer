@@ -20,11 +20,13 @@ app.get('/', (req, res) => {
 
 // Require Store routes (It must be right before app.listen)
 require('./endpoints/storeEndpoints.js')(app);
+require('./endpoints/routeEndpoints.js')(app);
+require('./endpoints/orderEndpoints.js')(app);
 app.listen(port, () => console.log(`Route-opt listening on port ${port}!`))
 
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
-    useNewUrlParser: true, useUnifiedTopology: true
+    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
 }).then(() => {
     console.log(`Successfully connected to the database`);
 }).catch(err => {
