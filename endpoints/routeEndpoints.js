@@ -1,6 +1,6 @@
 module.exports = (app) => {
-    const route = require('../utils/buildNewRoutes.js');
+    const route = require('../controller/routeController.js');
 
      // Create a new Route
-     app.get('/routes', route.createRoute);
+     app.get('/routes', route.createRoutes);
 }

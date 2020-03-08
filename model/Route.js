@@ -1,12 +1,7 @@
 const mongoose = require('mongoose');
 
 const RouteSchema = mongoose.Schema({
-    orders: Array,
-    legs: Array,
-    firstLeg: Object,
-    origin: Number,
-    destination: Number,
-    distance: Number
+    routes: Array,
 }, {
     timestamps: true
 });

@@ -2,7 +2,7 @@ var createRoute = (availableOrders) => {
     availableOrders.sort(compare);
     var routesToDeliver = [];
     var orderAlreadyRouted = new Set();
-    const limitToEachRoute = 4;
+    const limitToEachRoute = 3;
 
     availableOrders.forEach(mostUrgentOrderToDeliver => {
         var eachRoute = [];
@@ -168,11 +168,5 @@ var dataSet = [
         isDelivered: false
     }
 ];
-
-var order1 = dataSet[0];
-var order2 = dataSet[1];
-var distance = distanceBetweenTwoCoordinatesInKm(order1, order2);
-console.log(`Distance is ${distance} Km`);
-console.log(createRoute(dataSet));
 
 module.exports = 'buildNewRoutes.js';
