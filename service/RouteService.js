@@ -9,7 +9,7 @@ exports.createRoute = async () => {
 }
 
 var buildRoutes = async (availableOrders) => {
-    let routesToDeliver = {};
+    let routesToDeliver = new Map();
     let ordersAlreadyRouted = new Set();
     const limitToEachRoute = 3;
     const resolvedPromise = await Promise.all(availableOrders.map(async mostUrgentOrder => {
@@ -19,8 +19,9 @@ var buildRoutes = async (availableOrders) => {
     let store = resolvedPromise[0].result;
 
     availableOrders.forEach(mostUrgentOrder => {
+        let routeIdGenerator = mostUrgentOrder.id;
         let eachRoute = [];
-        let routeIdGenerator = 0;
+
         if (!ordersAlreadyRouted.has(mostUrgentOrder)) {
             mostUrgentOrder.routeId = routeIdGenerator;
             eachRoute.push(mostUrgentOrder);
@@ -39,28 +40,28 @@ var buildRoutes = async (availableOrders) => {
                 electedOrder = possibleOrder;
             }
         
-            if (ordersAlreadyRouted.has(mostUrgentOrder) && routesToDeliver.length != 0) {
+            if (ordersAlreadyRouted.has(mostUrgentOrder) 
+                && routesToDeliver.get(mostUrgentOrder.routeId) 
+                && electedOrder != null) {
                 let routeToAddOrder = routesToDeliver.get(mostUrgentOrder.routeId);
-                if (routeToAddOrder.length > 0) {
+                if (routeToAddOrder.length > 0 && routeToAddOrder.length < limitToEachRoute) {
                     electedOrder.routeId = routeToAddOrder.id;
                     routeToAddOrder.push(electedOrder);
                 }
-            } else if (eachRoute.length < limitToEachRoute){
-                possibleOrder.routeId = routeIdGenerator;
+            } else if (eachRoute.length < limitToEachRoute && electedOrder != null){
+                electedOrder.routeId = routeIdGenerator;
                 eachRoute.push(electedOrder);
             }
 
-            if (electedOrder != null) {
+            if (eachRoute.length < limitToEachRoute && electedOrder != null) {
                 ordersAlreadyRouted.add(electedOrder);
             }
       });
       if (eachRoute.length > 0) {
           routesToDeliver.set(routeIdGenerator, eachRoute);
-          routeIdGenerator += 1;
       }
     });
 
-    console.log("Final routes => ", routesToDeliver.join("\n"));
     return routesToDeliver;
 }
 
