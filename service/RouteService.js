@@ -27,31 +27,31 @@ var buildRoutes = async (availableOrders) => {
             ordersAlreadyRouted.add(mostUrgentOrder);
         }
 
-        availableOrders.forEach(order => {
-            let distanceToOrder = distanceBetweenTwoCoordinatesInKm(mostUrgentOrder, order);
-            console.log(`Most-Urgent-Order ${mostUrgentOrder.orderId} to Order ${order.orderId} --> ${distanceToOrder}KM`);
+        availableOrders.forEach(possibleOrder => {
+            let distanceToOrder = distanceBetweenTwoCoordinatesInKm(mostUrgentOrder, possibleOrder);
+            console.log(`Most-Urgent-Order ${mostUrgentOrder.orderId} to Order ${possibleOrder.orderId} --> ${distanceToOrder}KM`);
             let distanceToStore = distanceBetweenTwoCoordinatesInKm(store, mostUrgentOrder)
             console.log(`Most-Urgent-Order ${mostUrgentOrder.orderId} to Store ${store.name} --> ${distanceToStore}KM`);
         
-            let elegibleOrderToRouting = null;
+            let electedOrder = null;
             if(distanceToOrder < distanceToStore && distanceToOrder != 0 
-                && !ordersAlreadyRouted.has(order)) {
-                elegibleOrderToRouting = order;
+                && !ordersAlreadyRouted.has(possibleOrder)) {
+                electedOrder = possibleOrder;
             }
         
             if (ordersAlreadyRouted.has(mostUrgentOrder) && routesToDeliver.length != 0) {
                 let routeToAddOrder = routesToDeliver.get(mostUrgentOrder.routeId);
                 if (routeToAddOrder.length > 0) {
-                    elegibleOrderToRouting.routeId = routeToAddOrder.id;
-                    routeToAddOrder.push(elegibleOrderToRouting);
+                    electedOrder.routeId = routeToAddOrder.id;
+                    routeToAddOrder.push(electedOrder);
                 }
             } else if (eachRoute.length < limitToEachRoute){
-                order.routeId = routeIdGenerator;
-                eachRoute.push(elegibleOrderToRouting);
+                possibleOrder.routeId = routeIdGenerator;
+                eachRoute.push(electedOrder);
             }
 
-            if (elegibleOrderToRouting != null) {
-                ordersAlreadyRouted.add(elegibleOrderToRouting);
+            if (electedOrder != null) {
+                ordersAlreadyRouted.add(electedOrder);
             }
       });
       if (eachRoute.length > 0) {
