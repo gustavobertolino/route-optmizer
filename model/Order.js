@@ -4,6 +4,7 @@ const OrderSchema = mongoose.Schema({
     orderId: String,
     storeId: String,
     customerId: String,
+    routeId: String,
     distanceToStore: Number,
     latitude: Number,
     longitude: Number,
