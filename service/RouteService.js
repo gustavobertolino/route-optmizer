@@ -62,7 +62,13 @@ var buildRoutes = async (availableOrders) => {
       }
     });
 
-    return routesToDeliver;
+    const resultedRoutes = new Route({
+        routes: routesToDeliver
+    });
+
+    return await resultedRoutes.save()
+        .then(data => {return {success: true, result: data};})
+        .catch(error => {return {success: false, result: error};});
 }
 
 var distanceBetweenTwoCoordinatesInKm = (object1, object2) => {
