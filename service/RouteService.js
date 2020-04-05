@@ -12,8 +12,8 @@ var buildRoutes = async (availableOrders) => {
     var routesToDeliver = [];
     var orderAlreadyRouted = new Set();
     const limitToEachRoute = 3;
-    const resolvedPromise = await Promise.all(availableOrders.map(async mostUrgentOrder => {
-        const currentStore = await StoreService.findStoreById(mostUrgentOrder.storeId);
+    const resolvedPromise = await Promise.all(availableOrders.map(async order => {
+        const currentStore = await StoreService.findStoreById(order.storeId);
         return currentStore;
     }));
     var store = resolvedPromise[0].result;
@@ -35,19 +35,25 @@ var buildRoutes = async (availableOrders) => {
             && !orderAlreadyRouted.has(order)) {
             if (orderAlreadyRouted.has(mostUrgentOrderToDeliver) 
                 && routesToDeliver.length != 0) {
-                var routeToAddOrder = routesToDeliver
-                    .filter(route => {
-                        return route.includes(mostUrgentOrderToDeliver)
-                        && route.length < limitToEachRoute});
-                if (routeToAddOrder.length > 0) {
+                    var routeToAddOrder = [];
+                    var mostUrgentOrderId = mostUrgentOrderToDeliver.orderId;
+                    routesToDeliver.forEach(currentRoute => currentRoute.filter(currentOrder => {
+                            if (currentOrder.orderId == mostUrgentOrderId) {
+                                routeToAddOrder = currentRoute;
+                            }
+                        })
+                    );
+                    console.log(routeToAddOrder);
+                if (routeToAddOrder.length > 0 && routeToAddOrder < limitToEachRoute) {
                     routeToAddOrder[0].push(order);
-                } else {
+                } else if (eachRoute.length < limitToEachRoute){
                     eachRoute.push(order);
+                    orderAlreadyRouted.add(order);
                 }
-            } else {
+            } else if (eachRoute.length < limitToEachRoute){
                 eachRoute.push(order);
+                orderAlreadyRouted.add(order);
             }
-            orderAlreadyRouted.add(order);
         }
       });
       if (eachRoute.length > 0) {
@@ -56,7 +62,13 @@ var buildRoutes = async (availableOrders) => {
     });
 
     console.log("Final routes => ", routesToDeliver.join("\n"));
-    return routesToDeliver;
+    const resultedRoutes = new Route({
+        routes: routesToDeliver
+    });
+
+    await resultedRoutes.save()
+        .then(data => {return {success: true, result: data};})
+        .catch(error => {return {success: false, result: error};})
 }
 
 var distanceBetweenTwoCoordinatesInKm = (object1, object2) => {

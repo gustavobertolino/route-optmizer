@@ -2,6 +2,7 @@ const Order = require('../model/Order.js');
 
 exports.createNewOrder = async (orderDto) => {
     const newOrder = new Order({
+        orderId: orderDto.orderId,
         storeId: orderDto.storeId,
         customerId: orderDto.customerId,
         latitude: orderDto.latitude,
