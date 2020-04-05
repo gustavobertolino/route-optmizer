@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const RouteSchema = mongoose.Schema({
-    routes: Array,
+    routes: Map,
 }, {
     timestamps: true
 });
