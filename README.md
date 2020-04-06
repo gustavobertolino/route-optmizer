@@ -3,7 +3,7 @@ Routing vehicle application to find best routes to any store's orders. The appli
 
 The most important endpoint is to **create routes solution**
 
-The strategy used is called 'Push Forward'
+The strategy used is called **Push Forward**, in which each order is picked up from available orders to initiates a new route. Then the solution loops through orders to find someone that presents harmony in terms of distance to the order initially inserted in the route.
 
 ![vrp-image](vehicle-routing-problem-image.png)
 
