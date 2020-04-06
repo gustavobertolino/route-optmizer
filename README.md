@@ -5,6 +5,8 @@ The most important endpoint is to **create routes solution**
 
 The strategy used is called 'Push Forward'
 
+![vrp-image](vehicle-routing-problem-image.png)
+
 The application is construed in node.js. So you need to have npm and node.js installed in your machine (latest versions are recommended).
 
 To run and use the application:
