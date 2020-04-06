@@ -15,6 +15,8 @@ To run and use the application:
 
 2. in the root repository of the project, run the command npm start.
 
-3. call the endpoint you want following the instructions of each endpoint --> https://web.postman.co/collections/5181760-64bcb929-e600-4088-87b8-37250f8e7590?version=latest&workspace=1f994463-afca-40be-8942-0693c3464048
+3. call the endpoint you want following the instructions of each endpoint as follows
+
+https://documenter.getpostman.com/view/5181760/SzYbzHu2
 
 
