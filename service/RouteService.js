@@ -3,18 +3,16 @@ const OrderService = require('../service/OrderService.js');
 const StoreService = require('../service/StoreService.js')
 
 exports.createRoute = async () => {
-    let availableOrders = await OrderService.findAllOrders();
-    availableOrders = availableOrders.result.sort(sortOrdersByDeliveryTime);
+    let availableOrders = await (await OrderService.findAllOrders()).result.sort(sortOrdersByDeliveryTime);
     return buildRoutes(availableOrders);
 }
 
 var buildRoutes = async (availableOrders) => {
     let routesToDeliver = new Map();
     let ordersAlreadyRouted = new Set();
-    const limitToEachRoute = 3;
+    const maximumOrdersToEachRoute = 3;
     const resolvedPromise = await Promise.all(availableOrders.map(async mostUrgentOrder => {
-        const currentStore = await StoreService.findStoreById(mostUrgentOrder.storeId);
-        return currentStore;
+        return await StoreService.findStoreById(mostUrgentOrder.storeId);
     }));
     let store = resolvedPromise[0].result;
 
@@ -44,16 +42,16 @@ var buildRoutes = async (availableOrders) => {
                 && routesToDeliver.get(mostUrgentOrder.routeId) 
                 && electedOrder != null) {
                 let routeToAddOrder = routesToDeliver.get(mostUrgentOrder.routeId);
-                if (routeToAddOrder.length > 0 && routeToAddOrder.length < limitToEachRoute) {
+                if (routeToAddOrder.length > 0 && routeToAddOrder.length < maximumOrdersToEachRoute) {
                     electedOrder.routeId = routeToAddOrder.id;
                     routeToAddOrder.push(electedOrder);
                 }
-            } else if (eachRoute.length < limitToEachRoute && electedOrder != null){
+            } else if (eachRoute.length < maximumOrdersToEachRoute && electedOrder != null){
                 electedOrder.routeId = routeIdGenerator;
                 eachRoute.push(electedOrder);
             }
 
-            if (eachRoute.length < limitToEachRoute && electedOrder != null) {
+            if (eachRoute.length < maximumOrdersToEachRoute && electedOrder != null) {
                 ordersAlreadyRouted.add(electedOrder);
             }
       });
