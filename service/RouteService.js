@@ -84,7 +84,7 @@ var distanceBetweenTwoCoordinatesInKm = (object1, object2) => {
     return result;
 };
 
-let sortOrdersByDeliveryTime = (o1, o2) => {
+var sortOrdersByDeliveryTime = (o1, o2) => {
     let comparasion = 0;
     if (o1.deliveryTime < o2.deliveryTime) {
         comparasion = -1;
